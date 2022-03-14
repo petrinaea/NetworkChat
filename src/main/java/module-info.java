@@ -3,6 +3,7 @@ module com.petrina.client {
   requires javafx.fxml;
 
   requires org.kordamp.bootstrapfx.core;
+  requires lombok;
 
   opens com.petrina.client to javafx.fxml;
   exports com.petrina.client;
