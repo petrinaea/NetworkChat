@@ -79,8 +79,8 @@ public class MyServer {
       client.sendMessage(sender.getUsername(),message);
     }
   }
-
-  public synchronized void shortCastMessage(String message, ClientHandler sender) throws IOException {
+// home task
+  public void shortCastMessage(String message, ClientHandler sender) throws IOException {
     String[] parts = message.split("\\s+");
     String nickName = parts[1];
 

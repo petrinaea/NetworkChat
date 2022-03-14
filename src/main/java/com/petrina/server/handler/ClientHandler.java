@@ -109,7 +109,7 @@ public class ClientHandler {
       } else if (message.startsWith(END_CLIENT_CMD_PREFIX)){
         return;
       } else if (message.startsWith(PRIVATE_MSG_CMD_PREFIX)){
-        myServer.shortCastMessage(message,this);
+        myServer.shortCastMessage(message,this); // home task
       } else {
         myServer.broadCastMessage(message,this);
       }
@@ -120,7 +120,7 @@ public class ClientHandler {
     out.writeUTF(String.format("%s %s %s", CLIENT_MSG_CMD_PREFIX,sender,message));
   }
 
-
+// home task
   public void sendPrivateMessage(String sender, String message) throws IOException {
     out.writeUTF(String.format("%s %s",sender,message));
   }
