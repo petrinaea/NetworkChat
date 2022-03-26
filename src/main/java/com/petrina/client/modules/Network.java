@@ -11,6 +11,15 @@ import java.net.Socket;
 
 public class Network {
 
+  private static final String AUTH_CMD_PREFIX = "/auth";
+  private static final String AUTHOK_CMD_PREFIX = "/authok";
+  private static final String AUTHERR_CMD_PREFIX = "/autherr";
+  private static final String CLIENT_MSG_CMD_PREFIX = "/cMsg";
+  private static final String SERVER_MSG_CMD_PREFIX = "/sMsg";
+  private static final String PRIVATE_MSG_CMD_PREFIX = "/pMsg";
+  private static final String STOP_SERVER_CMD_PREFIX = "/stop";
+  private static final String END_CLIENT_CMD_PREFIX = "/end";
+
   public static final String DEFAULT_HOST = "localhost";
   public static final int DEFAULT_PORT = 8186;
   private TextArea chatHistory;
