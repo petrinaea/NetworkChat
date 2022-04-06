@@ -1,6 +1,7 @@
 package com.petrina.client.modules;
 
 import com.petrina.client.controllers.ChatController;
+import javafx.application.Platform;
 import javafx.scene.control.TextArea;
 
 import java.io.DataInputStream;
@@ -25,6 +26,7 @@ public class Network {
   private TextArea chatHistory;
   private DataInputStream in;
   private DataOutputStream out;
+  private String username;
 
   private final String host;
   private final int port;
@@ -57,6 +59,56 @@ public class Network {
     return out;
   }
 
+  public void waitMessage(ChatController chatController) {
+    Thread t = new Thread(() -> {
+      try {
+        while (true) {
+          String message = in.readUTF();
+
+          if (message.startsWith(CLIENT_MSG_CMD_PREFIX)) {
+            String[] parts = message.split("\\s+", 3);
+            String sender = parts[1];
+            String messageFromSender = parts[2];
+
+            Platform.runLater(() -> chatController.appendMessage(String.format("%s: %s", sender, messageFromSender)));
+          } else if (message.startsWith(SERVER_MSG_CMD_PREFIX)) {
+            String[] parts = message.split("\\s+", 2);
+            String serverMessage = parts[1];
+
+            Platform.runLater(() -> chatController.appendServerMessage(serverMessage));
+          }
+        }
+      } catch (IOException e) {
+        e.printStackTrace();
+      }
+    });
+
+    t.setDaemon(true);
+    t.start();
+
+  }
+
+  public String sendAuthMessage(String login, String password) {
+    try {
+      out.writeUTF(String.format("%s %s %s", AUTH_CMD_PREFIX, login, password));
+      String response = in.readUTF();
+      if (response.startsWith(AUTHOK_CMD_PREFIX)) {
+        this.username = response.split("\\s+", 2)[1];
+        return null;
+      } else {
+        return response.split("\\s+", 2)[1];
+      }
+    } catch (IOException e) {
+      e.printStackTrace();
+      return e.getMessage();
+    }
+
+  }
+
+  public String getUsername() {
+    return username;
+  }
+
   public void sendMessage(String message){
 
     try {
@@ -68,22 +120,8 @@ public class Network {
 
   }
 
-  public void waitMessage(ChatController chatController){
-    Thread t = new Thread(() -> {
-      try {
-        while (true) {
-
-          String message = in.readUTF();
-          chatController.appendMessage(message);
-        }
-      } catch (IOException e) {
-        e.printStackTrace();
-      }
-    });
-
-    t.setDaemon(true);
-    t.start();
-
+  public void sendPrivateMessage(String selectedRecipient, String message) {
+    sendMessage(String.format("%s %s %s", PRIVATE_MSG_CMD_PREFIX, selectedRecipient, message));
   }
 }
 

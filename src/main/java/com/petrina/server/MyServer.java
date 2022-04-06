@@ -71,22 +71,23 @@ public class MyServer {
     } return false;
   }
 
-  public synchronized void broadCastMessage(String message, ClientHandler sender) throws IOException {
+  public synchronized void broadCastMessage(String message, ClientHandler sender, boolean isServerMessage) throws IOException {
     for (ClientHandler client : clients) {
-      if (client == sender){
+      if (client == sender) {
         continue;
       }
-      client.sendMessage(sender.getUsername(),message);
+      client.sendMessage(isServerMessage ? null : sender.getUsername(), message);
     }
   }
-// home task
-  public void shortCastMessage(String message, ClientHandler sender) throws IOException {
-    String[] parts = message.split("\\s+");
-    String nickName = parts[1];
 
+  public synchronized void broadCastMessage(String message, ClientHandler sender) throws IOException {
+    broadCastMessage(message, sender, false);
+  }
+
+  public synchronized void sendPrivateMessage(ClientHandler sender, String recipient, String privateMessage) throws IOException {
     for (ClientHandler client : clients) {
-      if (client.getUsername().equals(nickName)){
-        client.sendPrivateMessage(sender.getUsername(),message);
+      if (client.getUsername().equals(recipient)) {
+        client.sendMessage(sender.getUsername(), privateMessage);
       }
     }
   }
