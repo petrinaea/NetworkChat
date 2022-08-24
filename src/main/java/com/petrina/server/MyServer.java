@@ -1,7 +1,8 @@
 package com.petrina.server;
 
 import com.petrina.server.authentication.AuthenticationService;
-import com.petrina.server.authentication.BaseAuthentication;
+import com.petrina.server.authentication.BaseAuthenticationService;
+import com.petrina.server.authentication.DBAuthenticationService;
 import com.petrina.server.handler.ClientHandler;
 
 import java.io.IOException;
@@ -11,43 +12,36 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class MyServer {
-
   private final ServerSocket serverSocket;
   private final AuthenticationService authenticationService;
   private final List<ClientHandler> clients;
 
   public MyServer(int port) throws IOException {
-
     serverSocket = new ServerSocket(port);
-    authenticationService = new BaseAuthentication();
-    clients  = new ArrayList<>();
-
+    authenticationService = new DBAuthenticationService();
+    clients = new ArrayList<>();
   }
 
+
   public void start() {
-    System.out.println("Сервер запущен");
+    System.out.println("СЕРВЕР ЗАПУЩЕН!");
+    System.out.println("----------------");
 
     try {
-      while (true){
+      while (true) {
         waitAndProcessNewClientConnection();
-
       }
     } catch (IOException e) {
       e.printStackTrace();
     }
-
   }
 
   private void waitAndProcessNewClientConnection() throws IOException {
-    System.out.println("Ожидание клиента");
+    System.out.println("Ожидание клиента...");
     Socket socket = serverSocket.accept();
-    System.out.println("Клиент подключился");
+    System.out.println("Клиент подключился!");
 
     processClientConnection(socket);
-  }
-
-  public AuthenticationService getAuthenticationService() {
-    return authenticationService;
   }
 
   private void processClientConnection(Socket socket) throws IOException {
@@ -61,32 +55,39 @@ public class MyServer {
 
   public synchronized void unSubscribe(ClientHandler clientHandler) {
     clients.remove(clientHandler);
+    System.out.println(clients);
   }
 
-  public synchronized boolean isUserNameBusy(String username) {
+  public synchronized boolean isUsernameBusy(String username) {
     for (ClientHandler client : clients) {
-      if (client.getUsername().equals(username)){
+      if (client.getUsername().equals(username)) {
         return true;
       }
-    } return false;
+    }
+    return false;
   }
 
-  public synchronized void broadCastMessage(String message, ClientHandler sender) throws IOException {
+  public AuthenticationService getAuthenticationService() {
+    return authenticationService;
+  }
+
+  public synchronized void broadcastMessage(String message, ClientHandler sender, boolean isServerMessage) throws IOException {
     for (ClientHandler client : clients) {
-      if (client == sender){
+      if (client == sender) {
         continue;
       }
-      client.sendMessage(sender.getUsername(),message);
+      client.sendMessage(isServerMessage ? null : sender.getUsername(), message);
     }
   }
-// home task
-  public void shortCastMessage(String message, ClientHandler sender) throws IOException {
-    String[] parts = message.split("\\s+");
-    String nickName = parts[1];
 
+  public synchronized void broadcastMessage(String message, ClientHandler sender) throws IOException {
+    broadcastMessage(message, sender, false);
+  }
+
+  public synchronized void sendPrivateMessage(ClientHandler sender, String recipient, String privateMessage) throws IOException {
     for (ClientHandler client : clients) {
-      if (client.getUsername().equals(nickName)){
-        client.sendPrivateMessage(sender.getUsername(),message);
+      if (client.getUsername().equals(recipient)) {
+        client.sendMessage(sender.getUsername(), privateMessage);
       }
     }
   }

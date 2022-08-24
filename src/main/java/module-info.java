@@ -4,8 +4,9 @@ module com.petrina.client {
 
   requires org.kordamp.bootstrapfx.core;
   requires lombok;
-
-  opens com.petrina.client to javafx.fxml;
+    requires org.xerial.sqlitejdbc;
+    requires java.sql;
+    opens com.petrina.client to javafx.fxml;
   exports com.petrina.client;
   exports com.petrina.client.controllers;
   opens com.petrina.client.controllers to javafx.fxml;
