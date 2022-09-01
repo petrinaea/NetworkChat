@@ -10,8 +10,11 @@ import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.input.MouseEvent;
 
+import java.io.*;
 import java.text.DateFormat;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 public class ChatController {
 
@@ -102,5 +105,49 @@ public class ChatController {
 
     public void setUsernameTitle(String username) {
         this.usernameTitle.setText(username);
+    }
+
+    public void saveHistory(String message) {
+        try {
+            File history = new File("history.txt");
+            if (!history.exists()) {
+                System.out.println("Файла истории не существует. Создадим файл истории");
+                history.createNewFile();
+            }
+            PrintWriter fileWriter = new PrintWriter(new FileWriter(history, true));
+
+            BufferedWriter bufferedWriter = new BufferedWriter(fileWriter);
+            bufferedWriter.write(message);
+            bufferedWriter.close();
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void loadHistory() throws IOException {
+        int sizeHistory = 100;
+        File history = new File("history.txt");
+
+        if (history.exists()){
+            List<String> historyList = new ArrayList<>();
+            FileInputStream in = new FileInputStream(history);
+            BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(in));
+
+            String temp;
+            while ((temp = bufferedReader.readLine()) != null) {
+                historyList.add(temp);
+            }
+
+            if (historyList.size() > sizeHistory) {
+                for (int i = historyList.size() - sizeHistory; i <= (historyList.size() - 1); i++) {
+                    chatHistory.appendText(historyList.get(i) + "\n");
+                }
+            } else {
+                for (int i = 0; i < historyList.size(); i++) {
+                    chatHistory.appendText(historyList.get(i) + "\n");
+                }
+            }
+        }
     }
 }
