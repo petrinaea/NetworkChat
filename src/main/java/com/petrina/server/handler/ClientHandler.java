@@ -32,25 +32,37 @@ public class ClientHandler {
 
     this.myServer = myServer;
     clientSocket = socket;
+
+    try {
+      in = new DataInputStream(clientSocket.getInputStream());
+      out = new DataOutputStream(clientSocket.getOutputStream());
+    } catch (IOException e) {
+      throw new RuntimeException(e);
+    }
+
+    MyServer.executorService.execute(new Runnable() {
+      @Override
+      public void run() {
+        try {
+          handle();
+        } catch (IOException e) {
+          throw new RuntimeException(e);
+        }
+      }
+    });
   }
 
   public void handle() throws IOException {
-    out = new DataOutputStream(clientSocket.getOutputStream());
-    in = new DataInputStream(clientSocket.getInputStream());
 
-    new Thread(() -> {
       try {
         authentication();
         readMessage();
       } catch (IOException e) {
         e.printStackTrace();
         myServer.unSubscribe(this);
-      } catch (SQLException e) {
-        throw new RuntimeException(e);
-      } catch (ClassNotFoundException e) {
+      } catch (SQLException | ClassNotFoundException e) {
         throw new RuntimeException(e);
       }
-    }).start();
   }
 
   private void authentication() throws IOException, SQLException, ClassNotFoundException {

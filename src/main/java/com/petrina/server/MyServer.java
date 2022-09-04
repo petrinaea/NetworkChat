@@ -1,7 +1,6 @@
 package com.petrina.server;
 
 import com.petrina.server.authentication.AuthenticationService;
-import com.petrina.server.authentication.BaseAuthenticationService;
 import com.petrina.server.authentication.DBAuthenticationService;
 import com.petrina.server.handler.ClientHandler;
 
@@ -10,6 +9,8 @@ import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 public class MyServer {
   private final ServerSocket serverSocket;
@@ -22,6 +23,7 @@ public class MyServer {
     clients = new ArrayList<>();
   }
 
+  public final static ExecutorService executorService = Executors.newFixedThreadPool(4);
 
   public void start() {
     System.out.println("СЕРВЕР ЗАПУЩЕН!");
