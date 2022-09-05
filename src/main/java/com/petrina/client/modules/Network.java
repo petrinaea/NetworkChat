@@ -69,7 +69,7 @@ public class Network {
             String[] parts = message.split("\\s+", 3);
             String sender = parts[1];
             String messageFromSender = parts[2];
-
+            chatController.saveHistory(sender + ": " + messageFromSender + "\n");
             Platform.runLater(() -> chatController.appendMessage(String.format("%s: %s", sender, messageFromSender)));
           } else if (message.startsWith(SERVER_MSG_CMD_PREFIX)) {
             String[] parts = message.split("\\s+", 2);

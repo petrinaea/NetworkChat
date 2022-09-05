@@ -6,6 +6,7 @@ import javafx.fxml.FXML;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 
+import java.io.IOException;
 import java.net.Socket;
 
 
@@ -18,7 +19,7 @@ public class AuthController {
     private StartClient startClient;
 
     @FXML
-    public void checkAuth() {
+    public void checkAuth() throws IOException {
         String login = loginField.getText().trim();
         String password = passwordField.getText().trim();
 

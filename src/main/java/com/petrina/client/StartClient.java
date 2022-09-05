@@ -70,12 +70,13 @@ public class StartClient extends Application {
     launch();
   }
 
-  public void openChatDialog() {
+  public void openChatDialog() throws IOException {
     authStage.close();
     primaryStage.show();
     primaryStage.setTitle(network.getUsername());
     network.waitMessage(chatController);
     chatController.setUsernameTitle(network.getUsername());
+    chatController.loadHistory();
   }
 
   public void showErrorAlert(String title, String errorMessage) {
