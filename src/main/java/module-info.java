@@ -6,6 +6,7 @@ module com.petrina.client {
   requires lombok;
     requires org.xerial.sqlitejdbc;
     requires java.sql;
+    requires org.apache.logging.log4j;
     opens com.petrina.client to javafx.fxml;
   exports com.petrina.client;
   exports com.petrina.client.controllers;
