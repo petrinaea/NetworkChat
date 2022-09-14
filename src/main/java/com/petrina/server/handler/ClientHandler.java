@@ -3,6 +3,8 @@ package com.petrina.server.handler;
 import com.petrina.server.MyServer;
 import com.petrina.server.authentication.AuthenticationService;
 import com.petrina.server.authentication.DBAuthenticationService;
+import org.apache.logging.log4j.Level;
+import org.apache.logging.log4j.LogManager;
 
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
@@ -28,12 +30,13 @@ public class ClientHandler {
 
   AuthenticationService auth = new DBAuthenticationService();
 
+  static final org.apache.logging.log4j.Logger logger = LogManager.getLogger(ClientHandler.class);
+
   public ClientHandler(MyServer myServer, Socket socket) {
 
     this.myServer = myServer;
     clientSocket = socket;
   }
-
 
   public void handle() throws IOException {
   MyServer.executorService.execute(new Runnable() {
@@ -72,7 +75,7 @@ public class ClientHandler {
 
       } else {
         out.writeUTF(AUTHERR_CMD_PREFIX + " Ошибка аутентификации");
-        System.out.println("Неудачная попытка аутентификации");
+        logger.log(Level.ERROR,"Неудачная попытка аутентификации");
       }
     }
   }
@@ -81,6 +84,7 @@ public class ClientHandler {
     String[] parts = message.split("\\s+");
     if (parts.length != 3) {
       out.writeUTF(AUTHERR_CMD_PREFIX + " Ошибка аутентификации");
+      logger.log(Level.ERROR,"Ошибка аутентификации");
     }
     String login = parts[1];
     String password = parts[2];
@@ -92,17 +96,20 @@ public class ClientHandler {
     if (username != null) {
       if (myServer.isUsernameBusy(username)) {
         out.writeUTF(AUTHERR_CMD_PREFIX + " Логин уже используется");
+        logger.log(Level.ERROR,"Логин уже используется - {}",username);
         return false;
       }
 
       out.writeUTF(AUTHOK_CMD_PREFIX + " " + username);
       myServer.subscribe(this);
-      System.out.println("Пользователь " + username + " подключился к чату");
+      logger.log(Level.INFO,"Пользователь {} подключился к чату",login);
+
       myServer.broadcastMessage(String.format(">>> %s присоединился к чату", username), this, true);
 
       return true;
     } else {
       out.writeUTF(AUTHERR_CMD_PREFIX + " Логин или пароль не соответствуют действительности");
+      logger.log(Level.ERROR,"Логин или пароль не соответствуют действительности - {} / {}",login,password);
       return false;
     }
   }
@@ -110,7 +117,8 @@ public class ClientHandler {
   private void readMessage() throws IOException {
     while (true) {
       String message = in.readUTF();
-      System.out.println("message | " + username + ": " + message);
+      logger.log(Level.INFO,"message | {} {}",username,message);
+
       if (message.startsWith(STOP_SERVER_CMD_PREFIX)) {
         System.exit(0);
       } else if (message.startsWith(END_CLIENT_CMD_PREFIX)) {

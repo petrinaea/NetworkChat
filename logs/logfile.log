@@ -1,0 +1,22 @@
+INFO  2022-09-07 22:51:09 [main] com.petrina.server.MyServer (MyServer.java:34) - СЕРВЕР ЗАПУЩЕН
+INFO  2022-09-07 22:51:09 [main] com.petrina.server.MyServer (MyServer.java:48) - Ожидание клиента...
+INFO  2022-09-07 22:51:22 [main] com.petrina.server.MyServer (MyServer.java:51) - Клиент подключился!
+INFO  2022-09-07 22:51:22 [main] com.petrina.server.MyServer (MyServer.java:48) - Ожидание клиента...
+INFO  2022-09-07 22:59:37 [main] com.petrina.server.MyServer (MyServer.java:34) - СЕРВЕР ЗАПУЩЕН
+INFO  2022-09-07 22:59:37 [main] com.petrina.server.MyServer (MyServer.java:48) - Ожидание клиента...
+INFO  2022-09-07 22:59:46 [main] com.petrina.server.MyServer (MyServer.java:51) - Клиент подключился!
+INFO  2022-09-07 22:59:46 [main] com.petrina.server.MyServer (MyServer.java:48) - Ожидание клиента...
+INFO  2022-09-07 22:59:57 [pool-1-thread-1] com.petrina.server.handler.ClientHandler (ClientHandler.java:106) - Пользователь john подключился к чату
+INFO  2022-09-07 23:00:05 [main] com.petrina.server.MyServer (MyServer.java:51) - Клиент подключился!
+INFO  2022-09-07 23:00:05 [main] com.petrina.server.MyServer (MyServer.java:48) - Ожидание клиента...
+INFO  2022-09-07 23:00:13 [pool-1-thread-2] com.petrina.server.handler.ClientHandler (ClientHandler.java:106) - Пользователь nick2 подключился к чату
+INFO  2022-09-07 23:00:33 [main] com.petrina.server.MyServer (MyServer.java:51) - Клиент подключился!
+INFO  2022-09-07 23:00:33 [main] com.petrina.server.MyServer (MyServer.java:48) - Ожидание клиента...
+ERROR 2022-09-07 23:00:40 [pool-1-thread-3] com.petrina.server.handler.ClientHandler (ClientHandler.java:113) - Логин или пароль не соответствуют действительности - null / 254
+ERROR 2022-09-07 23:01:07 [pool-1-thread-3] com.petrina.server.handler.ClientHandler (ClientHandler.java:113) - Логин или пароль не соответствуют действительности - null / 254
+ERROR 2022-09-07 23:01:19 [pool-1-thread-3] com.petrina.server.handler.ClientHandler (ClientHandler.java:113) - Логин или пароль не соответствуют действительности - null / 666
+INFO  2022-09-07 23:01:25 [pool-1-thread-3] com.petrina.server.MyServer (MyServer.java:68) - [com.petrina.server.handler.ClientHandler@4a960524, com.petrina.server.handler.ClientHandler@13c7f4bd]
+INFO  2022-09-07 23:01:32 [pool-1-thread-2] com.petrina.server.handler.ClientHandler (ClientHandler.java:121) - message | nick2 jhjn
+INFO  2022-09-07 23:01:39 [pool-1-thread-1] com.petrina.server.handler.ClientHandler (ClientHandler.java:121) - message | john 26
+INFO  2022-09-07 23:01:44 [pool-1-thread-2] com.petrina.server.MyServer (MyServer.java:68) - [com.petrina.server.handler.ClientHandler@4a960524]
+INFO  2022-09-07 23:01:45 [pool-1-thread-1] com.petrina.server.MyServer (MyServer.java:68) - []
